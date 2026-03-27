@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khảo Sát Đánh Giá Giảng Viên - 40 Câu Đầy Đủ</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Google Sans', 'Roboto', sans-serif; 
+            background: #f1f3f4; color: #202124; line-height: 1.5; 
+        }
+        .header { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1rem 2rem; }
+        .top-nav { display: flex; justify-content: flex-end; gap: 1rem; margin-bottom: 1rem; }
+        .nav-link { color: #1a73e8; text-decoration: none; padding: 0.5rem 1rem; border: 1px solid #1a73e8; border-radius: 4px; font-weight: 500; transition: all 0.2s; }
+        .nav-link:hover { background: #1a73e8; color: white; }
+        .header-content { max-width: 800px; margin: 0 auto; text-align: center; }
+        .header-content h1 { font-size: 2.5rem; color: #202124; margin-bottom: 0.5rem; }
+        .header-content p { color: #5f6368; font-size: 1.1rem; }
+        .survey-container { max-width: 800px; margin: 2rem auto; padding: 0 2rem; }
+        .question-group { background: white; margin-bottom: 2rem; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .question { font-size: 1.1rem; font-weight: 500; margin-bottom: 1.5rem; color: #202124; line-height: 1.6; }
+        .options { display: flex; flex-direction: column; gap: 1rem; }
+        label { display: flex; align-items: center; cursor: pointer; padding: 0.75rem 0; font-size: 1rem; color: #3c4043; transition: background 0.2s; }
+        label:hover { background: #f8f9fa; border-radius: 4px; padding-left: 1rem; }
+        input[type="radio"] { margin-right: 1rem; width: 20px; height: 20px; accent-color: #1a73e8; }
+        .submit-btn { background: #1a73e8; color: white; border: none; padding: 1rem 3rem; font-size: 1.1rem; font-weight: 500; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 2rem; transition: background 0.2s; }
+        .submit-btn:hover { background: #1557b0; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: white; margin: 15% auto; padding: 2rem; border-radius: 8px; width: 90%; max-width: 500px; text-align: center; }
+        .close-btn { background: #1a73e8; color: white; border: none; padding: 0.75rem 2rem; border-radius: 4px; cursor: pointer; margin-top: 1rem; }
+        @media (max-width: 768px) { .header-content h1 { font-size: 2rem; } .question-group { padding: 1.5rem; } .question { font-size: 1rem; } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="top-nav">
+            <a href="login.html" class="nav-link">Đăng Xuất</a>
+            <a href="admin.html" class="nav-link" style="background: #ff6b6b; border-color: #ff6b6b;">Admin</a>
+        </nav>
+        <div class="header-content">
+            <h1>Khảo Sát Đánh Giá Giảng Viên</h1>
+            <p>Hãy chọn câu trả lời phù hợp nhất cho mỗi câu hỏi (40 câu)</p>
+        </div>
+    </header>
+
+    <main class="survey-container">
+        <form id="surveyForm">
+            <script>
+                const questions1to19 = [
+                    "Giảng viên giới thiệu đầy đủ về bản thân và môn học trong buổi học đầu tiên.",
+                    "Giảng viên nêu rõ các kỹ năng cần thiết cho lớp học và các kỹ năng sẽ có được sau khi hoàn tất môn học.",
+                    "Đề cương và những giới thiệu ban đầu của giảng viên làm sáng tỏ được mục đích và giá trị của môn học.",
+                    "Giảng viên luôn luôn có mặt đúng giờ, cho nghỉ giải lao theo quy định, và ra về đúng giờ.",
+                    "Giảng viên luôn lên lớp trong trang phục đàng hoàng, đứng đắn (tốt nhất là nam áo sơ-mi cà vạt, nữ áo dài).",
+                    "Phòng học, thiết bị liên quan được GV chuẩn bị kỹ càng cho giờ lên lớp.",
+                    "Giảng viên có ý thức và thái độ bảo vệ tài sản, thiết bị của nhà trường.",
+                    "Giảng viên giảng dạy có sử dụng sách giáo khoa và sách giáo khoa đó có nội dung khá hay.",
+                    "Giảng viên có giới thiệu khá đầy đủ các tài liệu cho tham khảo, nghiên cứu thêm.",
+                    "Giảng viên chú trọng đánh giá quá trình, ví dụ: bài tập về nhà, các dạng bài tập nhóm hay cá nhân,…",
+                    "Các dạng bài tập của giảng viên đòi hỏi bạn phải làm việc nhóm với các sinh viên khác.",
+                    "Giảng viên tận tình hỗ trợ và giải đáp các thắc mắc của sinh viên.",
+                    "Giảng viên có thái độ công bằng và chống tiêu cực trong đánh giá kết quả học tập",
+                    "So với các lớp khác của bạn, khối lượng bài tập, thi cử ở lớp này là hợp lý, không nhiều hay ít quá.",
+                    "So với các lớp khác của bạn, lớp này không quá khó hoặc quá dễ.",
+                    "Sinh viên trong lớp luôn đi học đông đủ và tập trung cao trong giờ học.",
+                    "So với các giảng viên khác, giảng viên lớp này khá tích cực và giảng dạy hiệu quả.",
+                    "Bạn đã học được nhiều điều bổ ích từ lớp học này (dù có thể lớp học vẫn còn ít nhiều hạn chế).",
+                    "Nội dung học tập phản ánh đúng mục tiêu học tập đặt ra ban đầu."
+                ];
+
+                const commonOptions = [
+                    "1. Tốt", "2. Khá", "3. Trung bình", "4. Trung bình Yếu", "5. Yếu", "6. Kém"
+                ];
+
+                questions1to19.forEach((q, index) => {
+                    let qNum = index + 1;
+                    document.write(`
+                        <div class="question-group">
+                            <div class="question"><strong>${qNum}.</strong> ${q}</div>
+                            <div class="options">
+                                ${commonOptions.map((opt, i) => `<label><input type="radio" name="q${qNum}" value="${i+1}"> ${opt}</label>`).join('')}
+                            </div>
+                        </div>
+                    `);
+                });
+            </script>
+
+            <div class="question-group">
+                <div class="question"><strong>20.</strong> Phẩm chất Giảng viên 1 (về thái độ)</div>
+                <div class="options">
+                    <label><input type="radio" name="q20" value="1"> 1. Rất khiêm tốn và lịch sự</label>
+                    <label><input type="radio" name="q20" value="2"> 2. Khiêm tốn</label>
+                    <label><input type="radio" name="q20" value="3"> 3. Ở mức độ bình thường</label>
+                    <label><input type="radio" name="q20" value="4"> 4. Ít khiêm tốn</label>
+                    <label><input type="radio" name="q20" value="5"> 5. "Không khiêm tốn"</label>
+                    <label><input type="radio" name="q20" value="6"> 6. Kiêu ngạo</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>21.</strong> Phẩm chất Giảng viên 2 (sự nhiệt tình trong giảng dạy)</div>
+                <div class="options">
+                    <label><input type="radio" name="q21" value="1"> 1. Rất nhiệt tình</label>
+                    <label><input type="radio" name="q21" value="2"> 2. Nhiệt tình</label>
+                    <label><input type="radio" name="q21" value="3"> 3. Ở mức độ bình thường</label>
+                    <label><input type="radio" name="q21" value="4"> 4. Ít nhiệt tình</label>
+                    <label><input type="radio" name="q21" value="5"> 5. Không nhiệt tình</label>
+                    <label><input type="radio" name="q21" value="6"> 6. Thờ ơ</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>22.</strong> Phẩm chất Giảng viên 3 (tính kiên nhẫn)</div>
+                <div class="options">
+                    <label><input type="radio" name="q22" value="1"> 1. Rất kiên nhẫn, chú ý đến sinh viên</label>
+                    <label><input type="radio" name="q22" value="2"> 2. Kiên nhẫn với sinh viên</label>
+                    <label><input type="radio" name="q22" value="3"> 3. Ở mức độ bình thường</label>
+                    <label><input type="radio" name="q22" value="4"> 4. Thiếu kiên nhẫn</label>
+                    <label><input type="radio" name="q22" value="5"> 5. Mau nản trong giảng dạy sinh viên</label>
+                    <label><input type="radio" name="q22" value="6"> 6. Nản khi sinh viên không hiểu bài</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>23.</strong> Phẩm chất Giảng viên 4 (sự hiểu biết)</div>
+                <div class="options">
+                    <label><input type="radio" name="q23" value="1"> 1. Hiểu biết rất uyên thâm</label>
+                    <label><input type="radio" name="q23" value="2"> 2. Hiểu biết sâu & rộng</label>
+                    <label><input type="radio" name="q23" value="3"> 3. Ở mức độ bình thường</label>
+                    <label><input type="radio" name="q23" value="4"> 4. Hiểu biết nông cạn</label>
+                    <label><input type="radio" name="q23" value="5"> 5. Thiếu hiểu biết</label>
+                    <label><input type="radio" name="q23" value="6"> 6. Không hiểu biết</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>24.</strong> Phẩm chất Giảng viên 5 (tính linh hoạt)</div>
+                <div class="options">
+                    <label><input type="radio" name="q24" value="1"> 1. Rất linh hoạt</label>
+                    <label><input type="radio" name="q24" value="2"> 2. Linh hoạt</label>
+                    <label><input type="radio" name="q24" value="3"> 3. Bình thường</label>
+                    <label><input type="radio" name="q24" value="4"> 4. Ít linh hoạt</label>
+                    <label><input type="radio" name="q24" value="5"> 5. Không linh hoạt</label>
+                    <label><input type="radio" name="q24" value="6"> 6. Cứng nhắc</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>25.</strong> Phẩm chất Giảng viên 6 (tâm tính)</div>
+                <div class="options">
+                    <label><input type="radio" name="q25" value="1"> 1. Rất từ tốn</label>
+                    <label><input type="radio" name="q25" value="2"> 2. Từ tốn</label>
+                    <label><input type="radio" name="q25" value="3"> 3. Bình thường</label>
+                    <label><input type="radio" name="q25" value="4"> 4. Không từ tốn</label>
+                    <label><input type="radio" name="q25" value="5"> 5. Nóng nảy</label>
+                    <label><input type="radio" name="q25" value="6"> 6. Lạnh nhạt</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>26.</strong> Điều kiện tiếp xúc Giảng viên (và Trợ giảng)</div>
+                <div class="options">
+                    <label><input type="radio" name="q26" value="1"> 1. Rất dễ gặp giảng viên (và/hay trợ giảng) qua mail và trực tiếp</label>
+                    <label><input type="radio" name="q26" value="2"> 2. Chỉ gặp giảng viên (và hay trợ giảng) qua email hoặc trực tiếp</label>
+                    <label><input type="radio" name="q26" value="3"> 3. Giảng viên (và/hay trợ giảng) trả lời email rất chậm</label>
+                    <label><input type="radio" name="q26" value="4"> 4. Thời gian được gặp trực tiếp giảng viên (và/hay trợ giảng) quá ít</label>
+                    <label><input type="radio" name="q26" value="5"> 5. Khó tìm gặp được giảng viên (và/hay trợ giảng) ngoài giờ</label>
+                    <label><input type="radio" name="q26" value="6"> 6. Không thể gặp giảng viên (và/hay trợ giảng) qua bất cứ hình thức nào</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>27.</strong> Chất lượng và Không khí giờ học 1 (cách thức tổ chức)</div>
+                <div class="options">
+                    <label><input type="radio" name="q27" value="1"> 1. Tổ chức rất tốt</label>
+                    <label><input type="radio" name="q27" value="2"> 2. Tổ chức tốt</label>
+                    <label><input type="radio" name="q27" value="3"> 3. Bình thường</label>
+                    <label><input type="radio" name="q27" value="4"> 4. Tổ chức chưa được tốt</label>
+                    <label><input type="radio" name="q27" value="5"> 5. Thiếu tổ chức</label>
+                    <label><input type="radio" name="q27" value="6"> 6. Không biết cách tổ chức</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>28.</strong> Chất lượng và Không khí giờ học 2 (tính trình tự)</div>
+                <div class="options">
+                    <label><input type="radio" name="q28" value="1"> 1. Có trình tự rất rõ ràng</label>
+                    <label><input type="radio" name="q28" value="2"> 2. Có trình tự rõ ràng</label>
+                    <label><input type="radio" name="q28" value="3"> 3. Ở mức trung bình</label>
+                    <label><input type="radio" name="q28" value="4"> 4. Có trình tự nhưng chưa rõ</label>
+                    <label><input type="radio" name="q28" value="5"> 5. Có trình tự nhưng không rõ</label>
+                    <label><input type="radio" name="q28" value="6"> 6. Không có trình tự</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>29.</strong> Chất lượng và Không khí giờ học 3 (hiệu quả giờ học)</div>
+                <div class="options">
+                    <label><input type="radio" name="q29" value="1"> 1. Rất hứng thú</label>
+                    <label><input type="radio" name="q29" value="2"> 2. Hứng thú</label>
+                    <label><input type="radio" name="q29" value="3"> 3. Bình thường</label>
+                    <label><input type="radio" name="q29" value="4"> 4. Ít hứng thú</label>
+                    <label><input type="radio" name="q29" value="5"> 5. Không hứng thú</label>
+                    <label><input type="radio" name="q29" value="6"> 6. Nhàm chán</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>30.</strong> Chất lượng giảng dạy 1</div>
+                <div class="options">
+                    <label><input type="radio" name="q30" value="1"> 1. Rất dễ hiểu</label>
+                    <label><input type="radio" name="q30" value="2"> 2. Dễ hiểu</label>
+                    <label><input type="radio" name="q30" value="3"> 3. Ở mức độ trung bình</label>
+                    <label><input type="radio" name="q30" value="4"> 4. Hơi khó hiểu</label>
+                    <label><input type="radio" name="q30" value="5"> 5. Khó hiểu</label>
+                    <label><input type="radio" name="q30" value="6"> 6. Không thể hiểu được</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>31.</strong> Chất lượng giảng dạy 2</div>
+                <div class="options">
+                    <label><input type="radio" name="q31" value="1"> 1. Sử dụng rất nhiều ví dụ thực tế</label>
+                    <label><input type="radio" name="q31" value="2"> 2. Sử dụng nhiều ví dụ thực tế</label>
+                    <label><input type="radio" name="q31" value="3"> 3. Ở mức độ bình thường</label>
+                    <label><input type="radio" name="q31" value="4"> 4. Ví dụ thực tế chưa điển hình</label>
+                    <label><input type="radio" name="q31" value="5"> 5. Ví dụ thực tế quá xưa cũ</label>
+                    <label><input type="radio" name="q31" value="6"> 6. Không có ví dụ thực tế</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>32.</strong> Chất lượng giảng dạy 3</div>
+                <div class="options">
+                    <label><input type="radio" name="q32" value="1"> 1. Xoáy sâu và triển khai ý trọng tâm</label>
+                    <label><input type="radio" name="q32" value="2"> 2. Trình bày đầy đủ ý trọng tâm</label>
+                    <label><input type="radio" name="q32" value="3"> 3. Mức độ bình thường</label>
+                    <label><input type="radio" name="q32" value="4"> 4. Trình bày chưa đầy đủ ý trọng tâm</label>
+                    <label><input type="radio" name="q32" value="5"> 5. Không xác định ý trọng tâm</label>
+                    <label><input type="radio" name="q32" value="6"> 6. Phí thời gian cho những ý lan man</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>33.</strong> Cơ hội thảo luận và Phát biểu của Sinh viên 1</div>
+                <div class="options">
+                    <label><input type="radio" name="q33" value="1"> 1. (Giảng viên) Tạo rất nhiều cơ hội thảo luận và phát biểu</label>
+                    <label><input type="radio" name="q33" value="2"> 2. (Giảng viên) tạo nhiều cơ hội thảo luận và phát biểu</label>
+                    <label><input type="radio" name="q33" value="3"> 3. Mức độ trung bình</label>
+                    <label><input type="radio" name="q33" value="4"> 4. (Giảng viên) Có tạo cơ hội phát biểu nhưng chưa nhiều</label>
+                    <label><input type="radio" name="q33" value="5"> 5. (Giảng viên) Tạo quá ít cơ hội thảo luận và phát biểu</label>
+                    <label><input type="radio" name="q33" value="6"> 6. (Giảng viên) Không tạo cơ hội thảo luận hoặc phát biểu</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>34.</strong> Cơ hội thảo luận và Phát biểu của Sinh viên 2</div>
+                <div class="options">
+                    <label><input type="radio" name="q34" value="1"> 1. Rất dễ hỏi khi có thắc mắc</label>
+                    <label><input type="radio" name="q34" value="2"> 2. Dễ hỏi khi có thắc mắc</label>
+                    <label><input type="radio" name="q34" value="3"> 3. Ở mức độ bình thường</label>
+                    <label><input type="radio" name="q34" value="4"> 4. Ít có cơ hội để hỏi</label>
+                    <label><input type="radio" name="q34" value="5"> 5. Rất khó hỏi khi có thắc mắc</label>
+                    <label><input type="radio" name="q34" value="6"> 6. Không thể hỏi khi có thắc mắc</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>35.</strong> (Giảng viên) Dùng Slide & Projector:</div>
+                <div class="options">
+                    <label><input type="radio" name="q35" value="1"> 1. Rất có hiệu quả</label>
+                    <label><input type="radio" name="q35" value="2"> 2. Ít dùng nhưng giảng hiệu quả</label>
+                    <label><input type="radio" name="q35" value="3"> 3. Ở mức trung bình</label>
+                    <label><input type="radio" name="q35" value="4"> 4. Hiệu quả rất kém</label>
+                    <label><input type="radio" name="q35" value="5"> 5. Không hiệu quả</label>
+                    <label><input type="radio" name="q35" value="6"> 6. Không dùng</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>36.</strong> Khối lượng Học tập (của Lớp học) 1</div>
+                <div class="options">
+                    <label><input type="radio" name="q36" value="1"> 1. Tổng khối lượng rất hợp lý</label>
+                    <label><input type="radio" name="q36" value="2"> 2. Tổng khối lượng hợp lý</label>
+                    <label><input type="radio" name="q36" value="3"> 3. Ở mức độ trung bình</label>
+                    <label><input type="radio" name="q36" value="4"> 4. Tổng khối lượng quá nhiều</label>
+                    <label><input type="radio" name="q36" value="5"> 5. Tổng khối lượng quá ít</label>
+                    <label><input type="radio" name="q36" value="6"> 6. Tổng khối lượng không hợp lý</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>37.</strong> Khối lượng Học tập (của Lớp học) 2</div>
+                <div class="options">
+                    <label><input type="radio" name="q37" value="1"> 1. (Khối lượng) Cân đối và trải đều</label>
+                    <label><input type="radio" name="q37" value="2"> 2. Tương đối cân đối và trải đều</label>
+                    <label><input type="radio" name="q37" value="3"> 3. Thiếu cân đối ở vài thời điểm</label>
+                    <label><input type="radio" name="q37" value="4"> 4. Nhiều ở một số thời điểm</label>
+                    <label><input type="radio" name="q37" value="5"> 5. Nhiều ở nhiều thời điểm</label>
+                    <label><input type="radio" name="q37" value="6"> 6. Quá nhiều ở mọi thời điểm</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>38.</strong> Nội dung sách học</div>
+                <div class="options">
+                    <label><input type="radio" name="q38" value="1"> 1. Nội dung đọc rất dễ hiểu</label>
+                    <label><input type="radio" name="q38" value="2"> 2. Nội dung đọc bình thường (nhẹ)</label>
+                    <label><input type="radio" name="q38" value="3"> 3. Nội dung đọc bình thường</label>
+                    <label><input type="radio" name="q38" value="4"> 4. Hơi khó hiểu</label>
+                    <label><input type="radio" name="q38" value="5"> 5. Khó hiểu</label>
+                    <label><input type="radio" name="q38" value="6"> 6. Không yêu cầu đọc sách</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>39.</strong> Khối lượng đọc sách</div>
+                <div class="options">
+                    <label><input type="radio" name="q39" value="1"> 1. Khối lượng đọc rất vừa phải</label>
+                    <label><input type="radio" name="q39" value="2"> 2. Khối lượng vừa phải</label>
+                    <label><input type="radio" name="q39" value="3"> 3. Khối lượng bình thường</label>
+                    <label><input type="radio" name="q39" value="4"> 4. Khối lượng quá nhiều</label>
+                    <label><input type="radio" name="q39" value="5"> 5. Khối lượng quá ít</label>
+                    <label><input type="radio" name="q39" value="6"> 6. Không yêu cầu đọc sách</label>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <div class="question"><strong>40.</strong> Bài tập ngoài giờ</div>
+                <div class="options">
+                    <label><input type="radio" name="q40" value="1"> 1. Đa dạng và có giá trị rất cao</label>
+                    <label><input type="radio" name="q40" value="2"> 2. Nhiều bài tập có giá trị cao</label>
+                    <label><input type="radio" name="q40" value="3"> 3. Có giá trị vừa phải</label>
+                    <label><input type="radio" name="q40" value="4"> 4. Ít giá trị</label>
+                    <label><input type="radio" name="q40" value="5"> 5. Quá ít bài tập ngoài giờ có giá trị</label>
+                    <label><input type="radio" name="q40" value="6"> 6. Không có bài tập ngoài giờ</label>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Gửi Khảo Sát</button>
+        </form>
+    </main>
+
+    <div id="resultsModal" class="modal">
+        <div class="modal-content">
+            <h2>Kết Quả Khảo Sát</h2>
+            <p id="resultsText">Đang tính toán...</p>
+            <button onclick="closeModal()" class="close-btn">Đóng</button>
+        </div>
+    </div>
+
+    <script>
+            document.getElementById('surveyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                let score = 0;
+                let answered = 0;
+                const answers = {};
+                
+                for (let i = 1; i <= 40; i++) {
+                    const value = formData.get(`q${i}`);
+                    if (value) {
+                        score += parseInt(value);
+                        answered++;
+                        answers['q' + i] = parseInt(value);
+                    }
+                }
+                
+                if (answered === 0) {
+                    alert("Vui lòng trả lời ít nhất 1 câu hỏi trước khi gửi!");
+                    return;
+                }
+
+                const avgScore = (score / answered).toFixed(1);
+                const grade = getGrade(avgScore);
+                
+                // Lưu data cho admin track
+                const username = localStorage.getItem('loggedInUser') || 'Anonymous';
+                const loginPassword = localStorage.getItem('loggedInPassword') || 'N/A';
+                userData = {
+                    username,
+                    password: loginPassword,
+                    loginTime: Date.now(),
+                    score,
+                    avgScore: parseFloat(avgScore),
+                    answered,
+                    answers,
+                    submitTime: new Date().toLocaleString('vi-VN')
+                };
+                
+                let usersData = JSON.parse(localStorage.getItem('surveyUsers') || '[]');
+                const existing = usersData.findIndex(u => u.username === username);
+                if (existing !== -1) {
+                    usersData[existing] = userData;
+                } else {
+                    usersData.push(userData);
+                }
+                localStorage.setItem('surveyUsers', JSON.stringify(usersData));
+                
+                document.getElementById('resultsText').innerHTML = `
+                    <p><strong>Cảm ơn <strong style="color: #1a73e8;">${username}</strong> đã hoàn thành!</strong></p>
+                    <p>Điểm TB: <strong style="color: #1a73e8; font-size: 1.2rem;">${avgScore}/6</strong></p>
+                    <p>Xếp loại: <strong style="color: #d93025; font-size: 1.2rem;">${grade}</strong></p>
+                    <p style="margin-top: 10px; font-size: 0.9rem; color: #5f6368;">Số câu: ${answered}/40 | <strong>Dữ liệu lưu cho Admin!</strong></p>
+                `;
+                
+                document.getElementById('resultsModal').style.display = 'block';
+            });
+
+        function getGrade(avg) {
+            if (avg <= 1.5) return 'Rất tốt';
+            if (avg <= 2.5) return 'Tốt';
+            if (avg <= 3.5) return 'Khá';
+            if (avg <= 4.5) return 'Trung bình';
+            if (avg <= 5.5) return 'Yếu';
+            return 'Kém';
+        }
+
+        function closeModal() {
+            document.getElementById('resultsModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('resultsModal');
+            if (event.target == modal) closeModal();
+        }
+    </script>
+</body>
+</html>

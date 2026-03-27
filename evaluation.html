@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Đánh Giá Học Tập</title>
+    <link rel="stylesheet" href="evaluation.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="top-nav">
+            <a href="login.html" class="nav-link">Đăng Xuất</a>
+            <a href="facebet/index.html" class="nav-link facebet-link">Facebet</a>
+        </nav>
+        <div class="header-content">
+            <h1>Chào mừng, Học Sinh!</h1>
+            <p>Hệ thống đánh giá học tập trực tuyến</p>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>Điểm Trung Bình</h3>
+                <div class="stat-value">8.2</div>
+                <span class="stat-change positive">+0.3</span>
+            </div>
+            <div class="stat-card">
+                <h3>Tổng Môn Học</h3>
+                <div class="stat-value">12</div>
+            </div>
+            <div class="stat-card">
+                <h3>Đang Đánh Giá</h3>
+                <div class="stat-value">3</div>
+            </div>
+        </section>
+
+        <section class="subjects">
+            <h2>Danh Sách Môn Học</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Môn Học</th>
+                            <th>Giáo Viên</th>
+                            <th>Điểm HT1</th>
+                            <th>Điểm HT2</th>
+                            <th>Điểm TB</th>
+                            <th>Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subjects-table">
+                        <!-- JS populate -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="chart-section">
+            <h2>Biểu Đồ Điểm Số</h2>
+            <canvas id="chart" width="400" height="200"></canvas>
+        </section>
+    </main>
+
+    <script src="evaluation.js"></script>
+</body>
+</html>
+

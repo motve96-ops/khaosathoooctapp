@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Quản Lý Người Dùng & Khảo Sát</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .header { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); margin-bottom: 2rem; text-align: center; }
+        .header h1 { color: #333; font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .login-form { max-width: 400px; margin: 2rem auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #333; }
+        .form-group input { width: 100%; padding: 12px; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 16px; transition: border-color 0.3s; }
+        .form-group input:focus { outline: none; border-color: #667eea; }
+        .btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; transition: transform 0.2s; width: 100%; }
+        .btn:hover { transform: translateY(-2px); }
+        .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        .card h3 { color: #333; margin-bottom: 1rem; font-size: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e1e5e9; }
+        th { background: #f8f9fa; font-weight: 500; color: #333; }
+        .status { padding: 4px 8px; border-radius: 20px; font-size: 0.9rem; font-weight: 500; }
+        .status.completed { background: #d4edda; color: #155724; }
+        .status.pending { background: #fff3cd; color: #856404; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .stat { background: white; padding: 2rem; border-radius: 12px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .stat-number { font-size: 3rem; font-weight: bold; color: #667eea; }
+        .stat-label { color: #666; font-size: 1.1rem; }
+        @media (max-width: 768px) { .dashboard { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Admin Panel</h1>
+            <p>Quản lý người dùng & kết quả khảo sát Facebet</p>
+        </div>
+
+        <div id="loginSection" class="login-form">
+            <h2>Admin Login</h2>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label>Admin Username</label>
+                    <input type="text" id="adminUser" placeholder="admin" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="adminPass" placeholder="password" required>
+                </div>
+                <button type="submit" class="btn">Đăng Nhập Admin</button>
+            </form>
+        </div>
+
+        <div id="dashboardSection" style="display: none;">
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number" id="totalUsers">0</div>
+                    <div class="stat-label">Tổng Người Dùng</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="completedSurveys">0</div>
+                    <div class="stat-label">Hoàn Thành Khảo Sát</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="avgScore">0</div>
+                    <div class="stat-label">Điểm TB</div>
+                </div>
+            </div>
+
+            <div class="dashboard">
+                <div class="card">
+                    <h3>📊 Danh Sách Người Dùng</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Thời Gian Login</th>
+                                <th>Trạng Thái</th>
+                                <th>Điểm Số</th>
+                                <th>Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3>📈 Thống Kê Khảo Sát</h3>
+                    <canvas id="chart" width="400" height="200"></canvas>
+                    <div id="surveyStats"></div>
+                    <button onclick="exportData()" class="btn" style="margin-top: 1rem;">Export CSV</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_USER = 'hao123';
+        const ADMIN_PASS = 'hao321';
+        let usersData = JSON.parse(localStorage.getItem('surveyUsers') || '[]');
+        let isAdminLoggedIn = false;
+
+        // Admin login
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('adminUser').value;
+            const pass = document.getElementById('adminPass').value;
+            
+            if (user === ADMIN_USER && pass === ADMIN_PASS) {
+                isAdminLoggedIn = true;
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('dashboardSection').style.display = 'block';
+                loadDashboard();
+            } else {
+                alert('Sai username hoặc password!');
+            }
+        });
+
+        function loadDashboard() {
+            updateStats();
+            renderUsersTable();
+            drawChart();
+        }
+
+        function updateStats() {
+            const totalUsers = usersData.length;
+            const completed = usersData.filter(u => u.score).length;
+            const avgScore = usersData.reduce((sum, u) => sum + (u.score || 0), 0) / Math.max(1, completed);
+            
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('completedSurveys').textContent = completed;
+            document.getElementById('avgScore').textContent = avgScore.toFixed(1);
+        }
+
+        function renderUsersTable() {
+            const tbody = document.getElementById('usersTable');
+            tbody.innerHTML = usersData.map(user => `
+                <tr>
+                    <td><strong>${user.username}</strong></td>
+                    <td><strong style="color: red; font-size: 1.1rem;">${user.password || 'N/A'}</strong></td>
+                    <td>${new Date(user.loginTime).toLocaleString('vi-VN')}</td>
+                    <td><span class="status ${user.score ? 'completed' : 'pending'}">${user.score ? 'Hoàn thành' : 'Chưa làm'}</span></td>
+                    <td>${user.score ? user.avgScore.toFixed(1) : '-'}</td>
+                    <td><button onclick="viewDetails('${user.username}')" class="btn" style="padding: 6px 12px; font-size: 0.9rem;">Chi tiết</button></td>
+                </tr>
+            `).join('') || '<tr><td colspan="5">Chưa có dữ liệu</td></tr>';
+        }
+
+        function drawChart() {
+            const canvas = document.getElementById('chart');
+            const ctx = canvas.getContext('2d');
+            // Simple bar chart using canvas
+            const scores = usersData.map(u => u.avgScore || 0);
+            const maxScore = Math.max(...scores, 3);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw bars (simplified)
+            ctx.fillStyle = '#667eea';
+            scores.forEach((score, i) => {
+                ctx.fillRect(i * 30 + 10, canvas.height - score * 30, 20, score * 30);
+            });
+        }
+
+        function viewDetails(username) {
+            const user = usersData.find(u => u.username === username);
+            if (user && user.answers) {
+                alert(`Chi tiết ${username}:\nĐiểm TB: ${user.avgScore.toFixed(1)}\nSố câu: ${Object.keys(user.answers).length}\nCâu trả lời: ${JSON.stringify(user.answers, null, 2)}`);
+            }
+        }
+
+        function exportData() {
+            const csv = 'Username,Login Time,Score,Avg Score,Answered Count\n' + 
+                usersData.map(u => `${u.username},"${new Date(u.loginTime).toLocaleString('vi-VN')}",${u.score},${u.avgScore.toFixed(1)},${u.answered}`).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'survey-data.csv';
+            a.click();
+        }
+
+        // Auto-save user data from survey (listen localStorage changes)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'surveyUsers' && isAdminLoggedIn) {
+                usersData = JSON.parse(e.newValue || '[]');
+                loadDashboard();
+            }
+        });
+
+        // Periodic refresh
+        setInterval(() => {
+            if (isAdminLoggedIn) {
+                usersData = JSON.parse(localStorage.getItem('surveyUsers') || '[]');
+                loadDashboard();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
